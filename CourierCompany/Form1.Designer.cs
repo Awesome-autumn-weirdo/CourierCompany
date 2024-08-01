@@ -33,6 +33,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtDeltaT = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.lblRadius = new System.Windows.Forms.Label();
+            this.txtRadius = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -99,7 +101,7 @@
             this.lblCourierSpeed.Location = new System.Drawing.Point(24, 88);
             this.lblCourierSpeed.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCourierSpeed.Name = "lblCourierSpeed";
-            this.lblCourierSpeed.Size = new System.Drawing.Size(292, 26);
+            this.lblCourierSpeed.Size = new System.Drawing.Size(304, 26);
             this.lblCourierSpeed.TabIndex = 6;
             this.lblCourierSpeed.Text = "Средняя скорость курьера (км/ч)";
             // 
@@ -150,6 +152,8 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.LemonChiffon;
+            this.panel2.Controls.Add(this.txtRadius);
+            this.panel2.Controls.Add(this.lblRadius);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.txtDeltaT);
             this.panel2.Controls.Add(this.btnSimulate);
@@ -202,6 +206,23 @@
             this.chart1.TabIndex = 12;
             this.chart1.Text = "chart1";
             // 
+            // lblRadius
+            // 
+            this.lblRadius.AutoSize = true;
+            this.lblRadius.Font = new System.Drawing.Font("Sylfaen", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblRadius.Location = new System.Drawing.Point(24, 177);
+            this.lblRadius.Name = "lblRadius";
+            this.lblRadius.Size = new System.Drawing.Size(170, 26);
+            this.lblRadius.TabIndex = 11;
+            this.lblRadius.Text = "Макс. расстояние (км)";
+            // 
+            // txtRadius
+            // 
+            this.txtRadius.Location = new System.Drawing.Point(355, 181);
+            this.txtRadius.Name = "txtRadius";
+            this.txtRadius.Size = new System.Drawing.Size(132, 22);
+            this.txtRadius.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -239,5 +260,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtDeltaT;
+        private System.Windows.Forms.TextBox txtRadius;
+        private System.Windows.Forms.Label lblRadius;
     }
 }

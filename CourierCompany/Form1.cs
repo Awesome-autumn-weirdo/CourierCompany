@@ -18,7 +18,6 @@ namespace CourierCompany
         private int completedOrders = 0;
         private int failedOrders = 0;
         private double totalWaitingTime = 0;
-        //private string dataFilePath = "simulation_data.xml";
         private string dataFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "simulation_data.xml");
 
         public Form1()
@@ -26,105 +25,29 @@ namespace CourierCompany
             InitializeComponent();
             LoadData();
         }
+
         private void btnSimulate_Click(object sender, EventArgs e)
         {
             try
             {
-                int numCouriers;
-                double simulationTime;
-                double averageCourierSpeed;
-                double meanTimeBetweenOrders;
-                double deltaT;
-
-                // Проверка и парсинг количества курьеров
-                if (!int.TryParse(txtNumCouriers.Text, out numCouriers))
+                if (!ValidateAndParseInput(txtNumCouriers.Text, out int numCouriers, "Количество курьеров") ||
+                    !ValidateAndParseInput(txtSimulationTime.Text, out double simulationTime, "Время симуляции") ||
+                    !ValidateAndParseInput(txtCourierSpeed.Text, out double averageCourierSpeed, "Средняя скорость курьера") ||
+                    !ValidateAndParseInput(txtOrderRate.Text, out double meanTimeBetweenOrders, "Интенсивность потока") ||
+                    !ValidateAndParseInput(txtDeltaT.Text, out double deltaT, "Шаг времени") ||
+                    !ValidateAndParseInput(txtRadius.Text, out double maxDistance, "Максимальное расстояние"))
                 {
-                    MessageBox.Show("Количество курьеров должно быть целым числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (numCouriers <= 0)
-                {
-                    MessageBox.Show("Количество курьеров должно быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Проверка и парсинг времени симуляции
-                if (txtSimulationTime.Text.Contains("."))
-                {
-                    MessageBox.Show("Для записи дробных чисел используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (!double.TryParse(txtSimulationTime.Text, out simulationTime))
-                {
-                    MessageBox.Show("Время симуляции должно быть числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (simulationTime <= 0)
-                {
-                    MessageBox.Show("Время симуляции должно быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Проверка и парсинг средней скорости курьеров
-                if (txtCourierSpeed.Text.Contains("."))
-                {
-                    MessageBox.Show("Для записи дробных чисел используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (!double.TryParse(txtCourierSpeed.Text, out averageCourierSpeed))
-                {
-                    MessageBox.Show("Средняя скорость курьера должна быть числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (averageCourierSpeed <= 0)
-                {
-                    MessageBox.Show("Средняя скорость курьера должна быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Проверка и парсинг среднего времени между заказами
-                if (txtOrderRate.Text.Contains("."))
-                {
-                    MessageBox.Show("Для записи дробных чисел используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (!double.TryParse(txtOrderRate.Text, out meanTimeBetweenOrders))
-                {
-                    MessageBox.Show("Интенсивность потока должна быть числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (meanTimeBetweenOrders <= 0)
-                {
-                    MessageBox.Show("Интенсивность потока должна быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Проверка и парсинг дельта времени
-                if (txtDeltaT.Text.Contains("."))
-                {
-                    MessageBox.Show("Для записи дробных чисел используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (!double.TryParse(txtDeltaT.Text, out deltaT))
-                {
-                    MessageBox.Show("Шаг времени должен быть числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (deltaT <= 0)
-                {
-                    MessageBox.Show("Шаг времени должен быть больше нуля.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Если все проверки пройдены, выполняем симуляцию
                 InitializeCouriers(numCouriers);
-                SimulateDeliveries(simulationTime, averageCourierSpeed, meanTimeBetweenOrders, deltaT);
+                SimulateDeliveries(simulationTime, averageCourierSpeed, meanTimeBetweenOrders, deltaT, maxDistance);
 
                 double averageWaitingTime = completedOrders > 0 ? totalWaitingTime / completedOrders : 0;
                 double averageIdleTime = CalculateAverageIdleTime();
                 double averageLoad = CalculateAverageCourierLoad();
                 double averageDeliveryTime = orders.Count > 0 ? orders.Average(o => o.DeliveryTime - o.ArrivalTime) : 0;
-                double averageDistance = CalculateAverageDistance(); // среднее расстояние
+                double averageDistance = CalculateAverageDistance();
 
                 lblResult.Text = $"Всего заказов: {totalOrders}\n" +
                                  $"Выполнено: {completedOrders}\n" +
@@ -139,14 +62,46 @@ namespace CourierCompany
                 UpdateCharts(deltaT);
                 SaveData();
             }
-            catch (FormatException)
-            {
-                MessageBox.Show("Неправильный формат числового значения.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
             catch (Exception ex)
             {
                 MessageBox.Show("Произошла ошибка при обработке данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool ValidateAndParseInput(string input, out int result, string fieldName)
+        {
+            if (input.Contains("."))
+            {
+                MessageBox.Show($"Для записи дробных чисел в поле \"{fieldName}\" используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                result = default;
+                return false;
+            }
+
+            if (!int.TryParse(input, out result) || result <= 0)
+            {
+                MessageBox.Show($"{fieldName} должно быть положительным целым числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateAndParseInput(string input, out double result, string fieldName)
+        {
+            if (input.Contains("."))
+            {
+                MessageBox.Show($"Для записи дробных чисел в поле \"{fieldName}\" используйте запятые.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                result = default;
+                return false;
+            }
+
+            if (!double.TryParse(input, out result) || result <= 0)
+            {
+                MessageBox.Show($"{fieldName} должно быть положительным числом.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
 
         private double CalculateAverageDistance()
@@ -173,7 +128,7 @@ namespace CourierCompany
             return couriers.Count > 0 ? couriers.Average(c => c.IdleTime) : 0;
         }
 
-        private void SimulateDeliveries(double simulationTime, double averageCourierSpeed, double meanTimeBetweenOrders, double deltaT)
+        private void SimulateDeliveries(double simulationTime, double averageCourierSpeed, double meanTimeBetweenOrders, double deltaT, double maxDistance)
         {
             totalOrders = 0;
             completedOrders = 0;
@@ -205,7 +160,7 @@ namespace CourierCompany
                 // Проверка, нужно ли создать новый заказ
                 if (timeToNextOrder <= currentTime)
                 {
-                    double distance = GenerateUniformRandom(1.0, 20.0);
+                    double distance = GenerateUniformRandom(1.0, maxDistance);
                     Order newOrder = new Order(currentTime, distance);
                     orders.Add(newOrder);
                     totalOrders++;
@@ -229,7 +184,6 @@ namespace CourierCompany
                         failedOrders++;
                     }
                 }
-                courier.IdleTime += (simulationTime - courier.lastActiveTime);
             }
         }
 
@@ -298,7 +252,7 @@ namespace CourierCompany
         {
             double u1 = random.NextDouble();
             double u2 = random.NextDouble();
-            double z = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
+            double z = Math.Sqrt(-2 * Math.Log(u1)) * Math.Sin(2 * Math.PI * u2);
             return mean + stdDev * z;
         }
 
@@ -313,6 +267,7 @@ namespace CourierCompany
                     DeliveryTimePerPackage = double.Parse(txtCourierSpeed.Text),
                     MeanTimeBetweenOrders = double.Parse(txtOrderRate.Text),
                     DeltaT = double.Parse(txtDeltaT.Text),
+                    Radius = double.Parse(txtRadius.Text),
                     TotalOrders = totalOrders,
                     CompletedOrders = completedOrders,
                     FailedOrders = failedOrders,
@@ -349,6 +304,7 @@ namespace CourierCompany
                         txtCourierSpeed.Text = data.DeliveryTimePerPackage.ToString();
                         txtOrderRate.Text = data.MeanTimeBetweenOrders.ToString();
                         txtDeltaT.Text = data.DeltaT.ToString();
+                        txtRadius.Text = data.Radius.ToString();
 
                         totalOrders = data.TotalOrders;
                         completedOrders = data.CompletedOrders;
@@ -389,86 +345,4 @@ namespace CourierCompany
             SaveData();
         }
     }
-
-    public class Order
-    {
-        public double ArrivalTime { get; set; }
-        public double DeliveryTime { get; set; }
-        public double WaitingTime { get; set; }
-        public double Distance { get; set; }
-
-        public Order() { }
-
-        public Order(double arrivalTime, double distance)
-        {
-            ArrivalTime = arrivalTime;
-            Distance = distance;
-        }
-
-        public void SetDeliveryTime(double deliveryTime)
-        {
-            DeliveryTime = deliveryTime;
-        }
-
-        public void SetWaitingTime(double waitingTime)
-        {
-            WaitingTime = waitingTime;
-        }
-    }
-
-    public class Courier
-    {
-        public List<Order> AssignedOrders { get; private set; } = new List<Order>();
-        public double IdleTime { get; set; } = 0;
-        public double lastActiveTime = 0;
-        public int TotalOrdersAssigned { get; set; } = 0;
-
-        public double CurrentLoad
-        {
-            get
-            {
-                return AssignedOrders.Count;
-            }
-        }
-
-        public void AssignOrder(Order order)
-        {
-            if (AssignedOrders.Count > 0)
-            {
-                if (order.ArrivalTime > lastActiveTime)
-                {
-                    IdleTime += (order.ArrivalTime - lastActiveTime);
-                }
-            }
-            AssignedOrders.Add(order);
-            TotalOrdersAssigned++;
-            lastActiveTime = order.ArrivalTime;
-        }
-
-        public void CompleteOrder(Order order, double currentTime)
-        {
-            AssignedOrders.Remove(order);
-            if (AssignedOrders.Count > 0)
-            {
-                lastActiveTime = currentTime;
-            }
-        }
-    }
-
-    [Serializable]
-    public class SimulationData
-    {
-        public int NumCouriers { get; set; }
-        public double SimulationTime { get; set; }
-        public double DeliveryTimePerPackage { get; set; }
-        public double MeanTimeBetweenOrders { get; set; }
-        public double DeltaT { get; set; }
-        public int TotalOrders { get; set; }
-        public int CompletedOrders { get; set; }
-        public int FailedOrders { get; set; }
-        public double TotalWaitingTime { get; set; }
-        public Order[] Orders { get; set; }
-        public Courier[] Couriers { get; set; }
-    }
-
 }
