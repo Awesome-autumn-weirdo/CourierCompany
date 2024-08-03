@@ -15,9 +15,9 @@
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.txtNumCouriers = new System.Windows.Forms.TextBox();
             this.txtSimulationTime = new System.Windows.Forms.TextBox();
             this.txtCourierSpeed = new System.Windows.Forms.TextBox();
@@ -30,11 +30,11 @@
             this.lblResult = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.txtRadius = new System.Windows.Forms.TextBox();
+            this.lblRadius = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDeltaT = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.lblRadius = new System.Windows.Forms.Label();
-            this.txtRadius = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -119,6 +119,7 @@
             // btnSimulate
             // 
             this.btnSimulate.BackColor = System.Drawing.Color.Thistle;
+            this.btnSimulate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnSimulate.Font = new System.Drawing.Font("Sylfaen", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnSimulate.Location = new System.Drawing.Point(354, 283);
             this.btnSimulate.Margin = new System.Windows.Forms.Padding(4);
@@ -170,6 +171,23 @@
             this.panel2.Size = new System.Drawing.Size(517, 322);
             this.panel2.TabIndex = 11;
             // 
+            // txtRadius
+            // 
+            this.txtRadius.Location = new System.Drawing.Point(355, 181);
+            this.txtRadius.Name = "txtRadius";
+            this.txtRadius.Size = new System.Drawing.Size(132, 22);
+            this.txtRadius.TabIndex = 12;
+            // 
+            // lblRadius
+            // 
+            this.lblRadius.AutoSize = true;
+            this.lblRadius.Font = new System.Drawing.Font("Sylfaen", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblRadius.Location = new System.Drawing.Point(24, 177);
+            this.lblRadius.Name = "lblRadius";
+            this.lblRadius.Size = new System.Drawing.Size(212, 26);
+            this.lblRadius.TabIndex = 11;
+            this.lblRadius.Text = "Макс. расстояние (км)";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -192,36 +210,19 @@
             // chart1
             // 
             this.chart1.BackColor = System.Drawing.Color.Lavender;
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            this.chart1.Legends.Add(legend5);
             this.chart1.Location = new System.Drawing.Point(535, 12);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(749, 671);
             this.chart1.TabIndex = 12;
             this.chart1.Text = "chart1";
-            // 
-            // lblRadius
-            // 
-            this.lblRadius.AutoSize = true;
-            this.lblRadius.Font = new System.Drawing.Font("Sylfaen", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblRadius.Location = new System.Drawing.Point(24, 177);
-            this.lblRadius.Name = "lblRadius";
-            this.lblRadius.Size = new System.Drawing.Size(170, 26);
-            this.lblRadius.TabIndex = 11;
-            this.lblRadius.Text = "Макс. расстояние (км)";
-            // 
-            // txtRadius
-            // 
-            this.txtRadius.Location = new System.Drawing.Point(355, 181);
-            this.txtRadius.Name = "txtRadius";
-            this.txtRadius.Size = new System.Drawing.Size(132, 22);
-            this.txtRadius.TabIndex = 12;
             // 
             // Form1
             // 

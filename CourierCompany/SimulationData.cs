@@ -22,5 +22,15 @@ namespace CourierCompany
             public Order[] Orders { get; set; }
             public Courier[] Couriers { get; set; }
         }
- 
+    public class SimulationResult
+    {
+        public int TotalOrders { get; set; }
+        public int CompletedOrders { get; set; }
+        public int FailedOrders { get; set; }
+        public double AverageWaitingTime { get; set; }
+        public double AverageIdleTime { get; set; }
+        public double AverageCourierLoad { get; set; }
+        public double AverageDeliveryTime { get; set; }
+        public double AverageDistance { get; set; }
+    }
 }

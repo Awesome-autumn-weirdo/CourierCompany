@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CourierCompany
 {
-    public class Order
+    public class Order : Delivery
     {
-        public double ArrivalTime { get; set; }
+       // public double ArrivalTime { get; set; }
         public double DeliveryTime { get; set; }
         public double WaitingTime { get; set; }
-        public double Distance { get; set; }
+       // public double Distance { get; set; }
 
         public Order() { }
 
@@ -29,6 +29,11 @@ namespace CourierCompany
         public void SetWaitingTime(double waitingTime)
         {
             WaitingTime = waitingTime;
+        }
+
+        public override void Process()
+        {
+            // Логика обработки заказа, если нужно
         }
     }
 }

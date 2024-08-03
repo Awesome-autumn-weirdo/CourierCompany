@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourierCompany
 {
-    public class Courier
+    public class Courier : Delivery
     {
         public List<Order> AssignedOrders { get; private set; } = new List<Order>();
         public double IdleTime { get; set; } = 0;
@@ -19,6 +19,11 @@ namespace CourierCompany
             {
                 return AssignedOrders.Count;
             }
+        }
+
+        public override void Process()
+        {
+            // Логика обработки курьером, если нужно
         }
 
         public void AssignOrder(Order order)

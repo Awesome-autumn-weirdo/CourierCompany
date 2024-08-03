@@ -1,53 +1,50 @@
-﻿using System;
+﻿using CourierCompany;
 using System.IO;
 using System.Xml.Serialization;
-using System.Linq;
+using System;
 
-namespace CourierCompany
+public class DataManager : IDataHandler
 {
-    public class DataManager
+    private readonly string dataFilePath;
+
+    public DataManager(string filePath)
     {
-        private string dataFilePath;
+        dataFilePath = filePath;
+    }
 
-        public DataManager(string filePath)
+    public void SaveData(SimulationData data)
+    {
+        try
         {
-            dataFilePath = filePath;
+            XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
+            using (FileStream fs = new FileStream(dataFilePath, FileMode.Create))
+            {
+                serializer.Serialize(fs, data);
+            }
         }
-
-        public void SaveData(SimulationData data)
+        catch (Exception ex)
         {
-            try
+            throw new InvalidOperationException("Error saving data.", ex);
+        }
+    }
+
+    public SimulationData LoadData()
+    {
+        try
+        {
+            if (File.Exists(dataFilePath))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
-                using (FileStream fs = new FileStream(dataFilePath, FileMode.Create))
+                using (FileStream fs = new FileStream(dataFilePath, FileMode.Open))
                 {
-                    serializer.Serialize(fs, data);
+                    return (SimulationData)serializer.Deserialize(fs);
                 }
             }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Ошибка при сохранении данных.", ex);
-            }
+            return null;
         }
-
-        public SimulationData LoadData()
+        catch (Exception ex)
         {
-            try
-            {
-                if (File.Exists(dataFilePath))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
-                    using (FileStream fs = new FileStream(dataFilePath, FileMode.Open))
-                    {
-                        return (SimulationData)serializer.Deserialize(fs);
-                    }
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Ошибка при загрузке данных.", ex);
-            }
+            throw new InvalidOperationException("Error loading data.", ex);
         }
     }
 }
