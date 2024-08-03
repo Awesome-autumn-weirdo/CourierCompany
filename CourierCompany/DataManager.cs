@@ -3,48 +3,51 @@ using System.IO;
 using System.Xml.Serialization;
 using System;
 
-public class DataManager : IDataHandler
+namespace CourierCompany
 {
-    private readonly string dataFilePath;
-
-    public DataManager(string filePath)
+    public class DataManager : IDataHandler
     {
-        dataFilePath = filePath;
-    }
+        private readonly string dataFilePath;
 
-    public void SaveData(SimulationData data)
-    {
-        try
+        public DataManager(string filePath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
-            using (FileStream fs = new FileStream(dataFilePath, FileMode.Create))
-            {
-                serializer.Serialize(fs, data);
-            }
+            dataFilePath = filePath;
         }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException("Error saving data.", ex);
-        }
-    }
 
-    public SimulationData LoadData()
-    {
-        try
+        public void SaveData(SimulationData data)
         {
-            if (File.Exists(dataFilePath))
+            try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
-                using (FileStream fs = new FileStream(dataFilePath, FileMode.Open))
+                using (FileStream fs = new FileStream(dataFilePath, FileMode.Create))
                 {
-                    return (SimulationData)serializer.Deserialize(fs);
+                    serializer.Serialize(fs, data);
                 }
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error saving data.", ex);
+            }
         }
-        catch (Exception ex)
+
+        public SimulationData LoadData()
         {
-            throw new InvalidOperationException("Error loading data.", ex);
+            try
+            {
+                if (File.Exists(dataFilePath))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SimulationData));
+                    using (FileStream fs = new FileStream(dataFilePath, FileMode.Open))
+                    {
+                        return (SimulationData)serializer.Deserialize(fs);
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error loading data.", ex);
+            }
         }
     }
 }
