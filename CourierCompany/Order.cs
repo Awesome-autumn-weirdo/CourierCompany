@@ -8,10 +8,8 @@ namespace CourierCompany
 {
     public class Order : Delivery
     {
-       // public double ArrivalTime { get; set; }
         public double DeliveryTime { get; set; }
         public double WaitingTime { get; set; }
-       // public double Distance { get; set; }
 
         public Order() { }
 
