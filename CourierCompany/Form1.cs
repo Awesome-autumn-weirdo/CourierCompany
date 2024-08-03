@@ -34,6 +34,29 @@ namespace CourierCompany
                     return;
                 }
 
+                // Проверка на нереалистично большую скорость курьера
+                const double unrealisticSpeed = 130.0;
+                const double maxDistances = 500.0; // км                               
+                const double minOrderRate = 1.0; // 1 заказ в минуту
+                const double maxOrderRate = 1440.0; // 1 заказ в час
+
+                if (averageCourierSpeed > unrealisticSpeed)
+                {
+                    MessageBox.Show($"Средняя скорость курьера ({averageCourierSpeed} км/ч) превышает порог ({unrealisticSpeed} км/ч). Пожалуйста, введите значение меньше или равное 130.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                if (maxDistance > maxDistances)
+                {
+                    MessageBox.Show($"Максимальное расстояние ({maxDistance} км) превышает порог ({maxDistances} км). Пожалуйста, введите значение меньше или равно 500 км.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (meanTimeBetweenOrders < minOrderRate || meanTimeBetweenOrders > maxOrderRate)
+                {
+                    MessageBox.Show($"Интенсивность потока заказов должна быть в пределах от {minOrderRate} до {maxOrderRate} минут.", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Создаем экземпляр симуляции и запускаем её
                 var simulation = new Simulation(numCouriers, simulationTime, averageCourierSpeed, meanTimeBetweenOrders, deltaT, maxDistance);
                 simulation.Run();
@@ -66,8 +89,8 @@ namespace CourierCompany
                     CompletedOrders = result.CompletedOrders,
                     FailedOrders = result.FailedOrders,
                     TotalWaitingTime = result.AverageWaitingTime,
-                    Orders = simulation.Orders.ToArray(), 
-                    Couriers = simulation.Couriers.ToArray() 
+                    Orders = simulation.Orders.ToArray(),
+                    Couriers = simulation.Couriers.ToArray()
                 };
 
                 dataManager.SaveData(simulationData);
@@ -77,6 +100,7 @@ namespace CourierCompany
                 MessageBox.Show("Произошла ошибка при обработке данных.\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private bool ValidateAndParseInput(string input, out int result, string fieldName)
         {
