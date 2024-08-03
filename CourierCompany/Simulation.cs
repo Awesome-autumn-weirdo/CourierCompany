@@ -100,7 +100,7 @@ namespace CourierCompany
 
                     AssignOrderToCourier(newOrder);
 
-                    timeToNextOrder += RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
+                    timeToNextOrder += RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders));
                 }
 
                 currentTime += deltaT;

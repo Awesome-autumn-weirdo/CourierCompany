@@ -16,6 +16,7 @@ namespace CourierCompany
         {
             InitializeComponent();
             dataManager = new DataManager(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "simulation_data.xml"));
+            //dataManager = new DataManager(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "test.xml"));
             LoadData();
         }
 
@@ -64,9 +65,9 @@ namespace CourierCompany
                     TotalOrders = result.TotalOrders,
                     CompletedOrders = result.CompletedOrders,
                     FailedOrders = result.FailedOrders,
-                    TotalWaitingTime = result.AverageWaitingTime, // Adjust this if needed
-                    Orders = simulation.Orders.ToArray(), // Adjust this if needed
-                    Couriers = simulation.Couriers.ToArray() // Adjust this if needed
+                    TotalWaitingTime = result.AverageWaitingTime,
+                    Orders = simulation.Orders.ToArray(), 
+                    Couriers = simulation.Couriers.ToArray() 
                 };
 
                 dataManager.SaveData(simulationData);
