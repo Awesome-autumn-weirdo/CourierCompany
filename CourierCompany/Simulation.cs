@@ -1,13 +1,11 @@
 ﻿using CourierCompany;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 public class Simulation : ISimulation
 {
     private readonly List<Courier> couriers;
     private readonly List<Order> orders;
-    private readonly Random random = new Random();
 
     private readonly int numCouriers;
     private readonly double simulationTime;
@@ -42,11 +40,11 @@ public class Simulation : ISimulation
 
     public SimulationResult GetResult()
     {
-        double averageWaitingTime = completedOrders > 0 ? totalWaitingTime / completedOrders : 0;
-        double averageIdleTime = CalculateAverageIdleTime();
-        double averageLoad = CalculateAverageCourierLoad();
+        double averageWaitingTime = StatisticsUtils.CalculateAverageWaitingTime(orders, completedOrders);
+        double averageIdleTime = StatisticsUtils.CalculateAverageIdleTime(couriers);
+        double averageLoad = StatisticsUtils.CalculateAverageCourierLoad(couriers);
         double averageDeliveryTime = orders.Any() ? orders.Average(o => o.DeliveryTime - o.ArrivalTime) : 0;
-        double averageDistance = CalculateAverageDistance();
+        double averageDistance = StatisticsUtils.CalculateAverageDistance(orders);
 
         return new SimulationResult
         {
@@ -73,7 +71,7 @@ public class Simulation : ISimulation
     private void SimulateDeliveries()
     {
         double currentTime = 0;
-        double timeToNextOrder = GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
+        double timeToNextOrder = RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
 
         while (currentTime < simulationTime)
         {
@@ -94,14 +92,14 @@ public class Simulation : ISimulation
 
             if (timeToNextOrder <= currentTime)
             {
-                double distance = GenerateUniformRandom(1.0, maxDistance);
+                double distance = RandomUtils.GenerateUniformRandom(1.0, maxDistance);
                 Order newOrder = new Order(currentTime, distance);
                 orders.Add(newOrder);
                 totalOrders++;
 
                 AssignOrderToCourier(newOrder);
 
-                timeToNextOrder += GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
+                timeToNextOrder += RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
             }
 
             currentTime += deltaT;
@@ -128,18 +126,32 @@ public class Simulation : ISimulation
         newOrder.SetDeliveryTime(newOrder.ArrivalTime + deliveryTime);
     }
 
-    private double GenerateUniformRandom(double min, double max) => random.NextDouble() * (max - min) + min;
-
-    private double GenerateExponentialRandom(double lambda)
+    // Добавляем свойства с сеттерами для доступа к спискам заказов и курьеров
+    public List<Courier> Couriers
     {
-        double u = random.NextDouble();
-        return -Math.Log(1 - u) / lambda;
+        get => couriers;
+        set
+        {
+            // Заменить текущий список курьеров новыми данными
+            couriers.Clear();
+            if (value != null)
+            {
+                couriers.AddRange(value);
+            }
+        }
     }
 
-    private double CalculateAverageIdleTime() => couriers.Any() ? couriers.Average(c => c.IdleTime) : 0;
-
-    private double CalculateAverageCourierLoad() => couriers.Any() ? couriers.Sum(c => c.TotalOrdersAssigned) / (double)couriers.Count : 0;
-
-    private double CalculateAverageDistance() => orders.Any() ? orders.Average(o => o.Distance) : 0;
+    public List<Order> Orders
+    {
+        get => orders;
+        set
+        {
+            // Заменить текущий список заказов новыми данными
+            orders.Clear();
+            if (value != null)
+            {
+                orders.AddRange(value);
+            }
+        }
+    }
 }
-
