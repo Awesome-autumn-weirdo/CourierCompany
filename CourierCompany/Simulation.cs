@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CourierCompany;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -73,7 +74,7 @@ namespace CourierCompany
         private void SimulateDeliveries()
         {
             double currentTime = 0;
-            double timeToNextOrder = RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
+            double timeToNextOrder = RandomUtils.GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders));
 
             while (currentTime < simulationTime)
             {
@@ -155,3 +156,75 @@ namespace CourierCompany
         }
     }
 }
+
+//private void SimulateDeliveries(double simulationTime, double deliveryTimePerPackage, double meanTimeBetweenOrders, double deltaT)
+//{
+//    totalOrders = 0;
+//    completedOrders = 0;
+//    failedOrders = 0;
+//    totalWaitingTime = 0;
+
+//    double currentTime = 0;
+//    double timeToNextOrder = GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0)); // Среднее время между заказами в минутах
+
+//    while (currentTime < simulationTime)
+//    {
+//        foreach (var courier in couriers)
+//        {
+//            // Обрабатываем заказы, которые должны быть выполнены к текущему времени
+//            for (int i = courier.AssignedOrders.Count - 1; i >= 0; i--)
+//            {
+//                var order = courier.AssignedOrders[i];
+//                if (order.DeliveryTime <= currentTime)
+//                {
+//                    completedOrders++;
+//                    double waitingTime = order.DeliveryTime - order.ArrivalTime;
+//                    totalWaitingTime += waitingTime;
+//                    courier.CompleteOrder(order, currentTime); // Обновленный метод CompleteOrder
+//                }
+//            }
+//        }
+
+//        // Проверяем, если пришло время нового заказа
+//        if (timeToNextOrder <= currentTime)
+//        {
+//            Order newOrder = new Order(currentTime);
+//            orders.Add(newOrder);
+//            totalOrders++;
+
+//            // Назначаем заказ курьеру
+//            AssignOrderToCourier(newOrder, deliveryTimePerPackage, simulationTime);
+
+//            // Генерируем время до следующего заказа
+//            timeToNextOrder += GenerateExponentialRandom(1.0 / (meanTimeBetweenOrders / 60.0));
+//        }
+
+//        // Увеличиваем текущее время на шаг Δt
+//        currentTime += deltaT;
+//    }
+
+//    // Обработка оставшихся заказов после завершения времени симуляции
+//    foreach (var courier in couriers)
+//    {
+//        foreach (var order in courier.AssignedOrders)
+//        {
+//            if (order.DeliveryTime > simulationTime)
+//            {
+//                failedOrders++;
+//            }
+//        }
+//    }
+//}
+
+//private void AssignOrderToCourier(Order newOrder, double deliveryTimePerPackage, double simulationTime)
+//{
+//    // Находим наименее загруженного курьера и назначаем ему заказ
+//    Courier leastLoadedCourier = couriers.OrderBy(c => c.CurrentLoad).First();
+//    leastLoadedCourier.AssignOrder(newOrder);
+
+//    // Генерируем время выполнения заказа (нормально распределенное)
+//    double deliveryTime = GenerateNormalRandom(deliveryTimePerPackage, 0.1); // Среднее время доставки в минутах, стандартное отклонение 0.1 часа
+
+//    // Планируем выполнение заказа
+//    newOrder.SetDeliveryTime(newOrder.ArrivalTime + deliveryTime);
+//}

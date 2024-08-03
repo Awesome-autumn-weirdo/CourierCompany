@@ -11,7 +11,6 @@ namespace CourierCompany
         public double ArrivalTime { get; set; }
         public double Distance { get; set; }
 
-        public abstract void Process();
     }
 
 }

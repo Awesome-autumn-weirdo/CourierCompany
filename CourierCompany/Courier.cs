@@ -21,11 +21,6 @@ namespace CourierCompany
             }
         }
 
-        public override void Process()
-        {
-            // Логика обработки курьером, если нужно
-        }
-
         public void AssignOrder(Order order)
         {
             if (AssignedOrders.Count > 0)

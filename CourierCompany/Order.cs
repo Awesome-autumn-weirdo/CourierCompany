@@ -30,10 +30,5 @@ namespace CourierCompany
         {
             WaitingTime = waitingTime;
         }
-
-        public override void Process()
-        {
-            // Логика обработки заказа, если нужно
-        }
     }
 }
